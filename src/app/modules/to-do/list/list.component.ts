@@ -11,7 +11,7 @@ import { MatTableDataSource } from '@angular/material/table';
 export class ListComponent implements OnInit {
   displayedColumns: string[];
   toDoList: IList[];
-  selectedList: IList;
+  selectedListId: number;
   showForm = false;
   dataSource: MatTableDataSource<IList>;
   constructor(private toDoService: ToDoService) { }
@@ -48,12 +48,12 @@ export class ListComponent implements OnInit {
   }
 
   editList(list: IList) {
-    this.selectedList = list;
+    this.selectedListId = list.id;
     this.showForm = true;
   }
 
   addList() {
-    this.selectedList = undefined;
+    this.selectedListId = undefined;
     this.showForm = true;
   }
 
@@ -63,26 +63,48 @@ export class ListComponent implements OnInit {
       if (index >= 0) {
         const todo = this.toDoList.find(x => x.name === event.name && x.id !== event.id);
         if (todo) {
-          this.showForm = false;
-          alert('to do is exist in list !!!');
+          alert('list name is exist in list !!!');
         } else {
-          this.toDoList[index] = event;
-          this.dataSource.data = this.toDoList;
+          this.editToDoList(event.id, event.name);
         }
       } else {
         const todo = this.toDoList.find(x => x.name === event.name);
         if (todo) {
-          this.showForm = false;
-          alert('to do is exist in list !!!');
+          alert('list name is exist in list !!!');
         } else {
-          event.id = this.toDoList.length + 1;
-          event.items = 1;
-          this.toDoList.push(event);
-          this.dataSource.data = this.toDoList;
+          if (event && event.name) {
+            this.addToDoList(event.name);
+          }
         }
       }
+    } else {
+      this.showForm = false;
     }
-    this.showForm = false;
+  }
+
+  addToDoList(name: string) {
+    this.toDoService.addToDoList(name).subscribe((res: any) => {
+      if (res) {
+        this.showForm = false;
+        this.toDoList.push(res);
+        this.dataSource.data = this.toDoList;
+      }
+    }, (e) => {
+      console.log('addToDoList has Error');
+    });
+  }
+
+  editToDoList(listId: number, name: string) {
+    this.toDoService.modifyToDoList(listId, name).subscribe((res: any) => {
+      if (res) {
+        this.showForm = false;
+        const index = this.toDoList.findIndex(x => x.id === res.id);
+        this.toDoList[index] = res;
+        this.dataSource.data = this.toDoList;
+      }
+    }, (e) => {
+      console.log('addToDoList has Error');
+    });
   }
 
 }

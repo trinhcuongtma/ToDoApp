@@ -4,7 +4,7 @@ import { HttpParams, HttpHeaders } from '@angular/common/http';
 import { HttpResponse } from '@angular/common/http';
 import { Observable, of, throwError } from 'rxjs';
 import { RestService } from './rest.service';
-import { IList, ITask } from '../types/interface';
+import { IList, ITask, IRequestCreateTask, IRequestModifyTask } from '../types/interface';
 
 @Injectable({
   providedIn: 'root'
@@ -41,18 +41,6 @@ export class ToDoService {
 
 
   getToDoList(): Observable<IList[]> {
-  //   return of ([
-  //     {
-  //       name: 'High-Priority tasks',
-  //       id: 1,
-  //       items: 10
-  //     },
-  //     {
-  //       name: 'Low-Priority tasks',
-  //       id: 2,
-  //       items: 10
-  //     }
-  //   ]);
     return this.httpService.get(this.apiServer + '/lists')
       .pipe(
         map(d => {
@@ -61,97 +49,100 @@ export class ToDoService {
       ));
   }
 
-  addToDoList(list: IList): Observable<IList> {
-    return of ({
-      name: 'High-Priority tasks',
-      id: 1,
-      tasks: 10
-    });
+  addToDoList(listName: string): Observable<IList> {
+    const request = {
+      name: listName
+    };
+    return this.httpService.post(this.apiServer + '/lists', request)
+      .pipe(
+        map(d => {
+          return d.body as IList;
+        }, throwError('Error')
+      ));
   }
 
   getToDoListInformation(listId: number): Observable<IList> {
-    return of ({
-      name: 'High-Priority tasks',
-      id: 1,
-      tasks: 10
-    });
+    return this.httpService.get(this.apiServer + '/lists/' + listId)
+      .pipe(
+        map(d => {
+          return d.body as IList;
+        }, throwError('Error')
+      ));
   }
 
-  modifyToDoList(listId: number): Observable<IList> {
-    return of ({
-      name: 'High-Priority tasks',
-      id: 1,
-      tasks: 10
-    });
+  modifyToDoList(listId: number, listName: string): Observable<any> {
+    const request = {
+      name: listName
+    };
+    return this.httpService.put(this.apiServer + '/lists/' + listId, request)
+    .pipe(
+      map(d => {
+        return d;
+      }, throwError('Error')
+    ));
   }
 
   deleteToDoList(listId: number): Observable<boolean> {
-    return of (true);
+    return this.httpService.delete(this.apiServer + '/lists/' + listId)
+      .pipe(
+        map(d => {
+          return true;
+        }, throwError('Error')
+      ));
   }
 
   getAllUserTask(): Observable<ITask[]> {
-    return of ([
-      {
-        name: 'Make something awesome!',
-        completed: true,
-        listId: 1,
-        createdAt: new Date(),
-        completedAt: new Date(),
-        id: 1
-      }
-    ]);
+    return this.httpService.get(this.apiServer + '/tasks')
+    .pipe(
+      map(d => {
+        return d.body as ITask[];
+      }, throwError('Error')
+    ));
   }
 
   getTaskFromToDoList(listId: number): Observable<ITask[]> {
-    return of ([
-      {
-        name: 'Make something awesome!',
-        completed: true,
-        listId: 1,
-        createdAt: new Date(),
-        completedAt: new Date(),
-        id: 1
-      }
-    ]);
+    return this.httpService.get(this.apiServer + '/lists/' + listId + '/tasks')
+      .pipe(
+        map(d => {
+          return d.body as ITask[];
+        }, throwError('Error')
+      ));
   }
 
-  createTask(listId: number, task: ITask): Observable<ITask[]> {
-    return of ([
-      {
-        name: 'Make something awesome!',
-        completed: true,
-        listId: 1,
-        createdAt: new Date(),
-        completedAt: new Date(),
-        id: 1
-      }
-    ]);
+  createTask(listId: number, request: IRequestCreateTask): Observable<ITask> {
+    return this.httpService.post(this.apiServer + '/lists/' + listId + '/tasks', request)
+      .pipe(
+        map(d => {
+          return d.body as ITask;
+        }, throwError('Error')
+      ));
   }
 
   getTaskInfomation(listId: number, taskId: number): Observable<ITask> {
-    return of ({
-        name: 'Make something awesome!',
-        completed: true,
-        listId: 1,
-        createdAt: new Date(),
-        completedAt: new Date(),
-        id: 1
-      });
+    return this.httpService.get(this.apiServer + '/lists/' + listId + '/tasks/' + taskId)
+      .pipe(
+        map(d => {
+          return d.body as ITask;
+        }, throwError('Error')
+      ));
   }
 
-  modifyTask(listId: number, task: ITask): Observable<ITask> {
-    return of ({
-        name: 'Make something awesome!',
-        completed: true,
-        listId: 1,
-        createdAt: new Date(),
-        completedAt: new Date(),
-        id: 1
-      });
+  modifyTask(Id: number, task: IRequestModifyTask): Observable<any> {
+    return this.httpService.put(this.apiServer + '/lists/' + task.listId + '/tasks/' + Id, task)
+      .pipe(
+        map(d => {
+          return d;
+        }, throwError('Error')
+      ));
   }
 
   deleteTask(listId: number, taskId: number): Observable<boolean> {
-    return of (true);
+    return this.httpService.delete(this.apiServer + '/lists/' + listId + '/tasks/' + taskId)
+      .pipe(
+        map(d => {
+          return true;
+        }, throwError('Error')
+      ));
   }
 
 

@@ -37,4 +37,4 @@
         </mat-card-content>
       </mat-card>
 </div>
-<app-list-form *ngIf="showForm" [list]="selectedList" (closeForm)="closeToDoForm($event)"></app-list-form>
+<app-list-form *ngIf="showForm" [listId]="selectedListId" (closeForm)="closeToDoForm($event)"></app-list-form>

@@ -7,6 +7,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 import { ToDoComponent } from './to-do.component';
 import { ToDoRoutingModule } from './to-do-routing.module';
@@ -25,6 +26,7 @@ import { TaskFormComponent } from './list/list-form/task/task-form/task-form.com
     CdkTableModule,
     MatIconModule,
     MatButtonModule,
+    MatCheckboxModule,
     FormsModule,
     ReactiveFormsModule,
     ToDoRoutingModule

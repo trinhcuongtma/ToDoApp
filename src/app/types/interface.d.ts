@@ -8,7 +8,7 @@ export interface ITask {
   name: string;
   completed: boolean;
   id: number;
-  listId: number;
+  list_id: number;
   createdAt: Date;
   completedAt: Date;
 }
@@ -18,8 +18,6 @@ export interface IRequestCreateTask {
   completed: boolean;
 }
 
-export interface IRequestModifyTask {
-  name: string;
-  completed: boolean;
+export interface IRequestModifyTask extends IRequestCreateTask {
   listId: number;
 }
