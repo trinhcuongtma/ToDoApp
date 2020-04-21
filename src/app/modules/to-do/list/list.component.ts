@@ -58,24 +58,10 @@ export class ListComponent implements OnInit {
     });
   }
 
-  // getAllTask() {
-  //   this.toDoService.getAllUserTask().subscribe((res: any) => {
-  //     if (res) {
-  //       this.taskDataSource = new MatTableDataSource<Task>(res);
-  //     }
-  //   }, (e) => {
-  //     console.log('getToDoList Error');
-  //   });
-  // }
-
   deleteList(id: number) {
     this.toDoService.deleteToDoList(id).subscribe((res: any) => {
       if (res) {
-        const index = this.toDoList.findIndex(x => x.id === id);
-        if (index >= 0) {
-          this.toDoList.splice(index, 1);
-          this.dataSource.data = this.toDoList;
-        }
+        this.getData();
       }
     }, (e) => {
       console.log('deleteToDoList Error');

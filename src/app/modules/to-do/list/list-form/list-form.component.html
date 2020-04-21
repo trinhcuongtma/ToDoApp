@@ -11,7 +11,7 @@
                 </mat-form-field>
             </form>
             <br>
-            <app-task [list]="list"></app-task>
+            <app-task *ngIf="listId" [list]="list"></app-task>
             <div class="button-content">
                 <button mat-raised-button (click)="addList()">Save</button>
                 <button mat-raised-button (click)="close()">Cancel</button>
