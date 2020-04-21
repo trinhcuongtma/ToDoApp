@@ -1,4 +1,6 @@
-import { ITask } from 'src/app/types/interface';
-export interface Task extends ITask {
+export class TaskInfo {
+    id: number;
+    name: string;
     listName: string;
-};
+    completed: boolean;
+}

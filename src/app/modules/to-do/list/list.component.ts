@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { IList } from 'src/app/types/interface';
+import { IList, ITask } from 'src/app/types/interface';
 import { ToDoService } from 'src/app/services/to-do.service';
 import { MatTableDataSource } from '@angular/material/table';
+import { forkJoin } from 'rxjs';
+import { TaskInfo } from '../share/todo';
 
 @Component({
   selector: 'app-list',
@@ -11,27 +13,60 @@ import { MatTableDataSource } from '@angular/material/table';
 export class ListComponent implements OnInit {
   displayedColumns: string[];
   toDoList: IList[];
+  taskColumns: string[];
   selectedListId: number;
   showForm = false;
   dataSource: MatTableDataSource<IList>;
+  taskDataSource: MatTableDataSource<TaskInfo>;
   constructor(private toDoService: ToDoService) { }
 
   ngOnInit() {
     this.displayedColumns = ['id', 'name', 'tasks', 'action'];
-    this.getToDoList();
+    this.taskColumns = ['id', 'name', 'listName', 'completed'];
+    this.getData();
   }
 
-  getToDoList() {
+  getData() {
     this.toDoService.getToDoList().subscribe((res: any) => {
       if (res) {
         this.toDoList = res;
         this.dataSource = new MatTableDataSource<IList>(res);
-        console.log(res);
       }
     }, (e) => {
       console.log('getToDoList Error');
     });
+
+    forkJoin(
+      this.toDoService.getToDoList(),
+      this.toDoService.getAllUserTask()
+    ).subscribe (res => {
+      this.toDoList = res[0];
+      const taskList = res[1].map( item => {
+        const list = this.toDoList.find(x => x.id === item.list_id);
+        const taskInfo: TaskInfo = {
+          id: item.id,
+          name: item.name,
+          completed: item.completed,
+          listName: list ? list.name : '',
+        };
+        return taskInfo;
+      });
+      this.taskDataSource = new MatTableDataSource<TaskInfo>(taskList);
+      this.dataSource = new MatTableDataSource<IList>(res[0]);
+    }, err => {
+      console.log('get data has error');
+    });
   }
+
+  // getAllTask() {
+  //   this.toDoService.getAllUserTask().subscribe((res: any) => {
+  //     if (res) {
+  //       this.taskDataSource = new MatTableDataSource<Task>(res);
+  //     }
+  //   }, (e) => {
+  //     console.log('getToDoList Error');
+  //   });
+  // }
 
   deleteList(id: number) {
     this.toDoService.deleteToDoList(id).subscribe((res: any) => {
@@ -80,6 +115,7 @@ export class ListComponent implements OnInit {
     } else {
       this.showForm = false;
     }
+    this.getData();
   }
 
   addToDoList(name: string) {

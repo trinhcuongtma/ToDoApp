@@ -41,8 +41,9 @@ export class LoginComponent implements OnInit {
         localStorage.setItem('apikey', res.apiKey);
         this.route.navigate(['/']);
       }
-    }, (e) => {
       this.isLoginFailed = false;
+    }, (e) => {
+      this.isLoginFailed = true;
       console.log('login false');
     });
   }

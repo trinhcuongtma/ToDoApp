@@ -81,15 +81,19 @@ export class TaskComponent implements OnInit, OnChanges {
   }
 
   saveTask() {
-    if (this.selectedtask) {
-      this.modifyTask();
+    if (this.taskForm && !this.taskForm.value.name) {
+      alert('Please insert task name.');
     } else {
-      this.addTask();
+      if (this.selectedtask) {
+        this.modifyTask();
+      } else {
+        this.addTask();
+      }
     }
   }
 
   addTask() {
-    if (this.taskForm) {
+    if (this.taskForm && this.taskForm.value.name) {
       const task: IRequestCreateTask = {
         completed: this.taskForm.value.completed,
         name: this.taskForm.value.name,
@@ -131,6 +135,7 @@ export class TaskComponent implements OnInit, OnChanges {
       this.taskForm.controls.name.setValue(null);
       this.taskForm.controls.completed.setValue(false);
       this.selectedtask = undefined;
+      this.buttonLabel = 'Add';
     }
   }
 
