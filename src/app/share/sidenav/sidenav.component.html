@@ -1,0 +1,14 @@
+<div id="sidenav">
+    <mat-toolbar color="primary">
+        <mat-toolbar-row>
+            <span>To Do APP</span>
+            <span class="spacer"></span>
+            <mat-icon class="menu-button"  [matMenuTriggerFor]="menu">more_vert</mat-icon>
+            <mat-menu #menu="matMenu">
+            <button mat-menu-item (click)="logout()">
+                <span>Logout</span>
+            </button>
+            </mat-menu>
+        </mat-toolbar-row>
+    </mat-toolbar>
+</div>
