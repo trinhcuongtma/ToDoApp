@@ -1,8 +1,7 @@
 import { map } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
-import { HttpParams, HttpHeaders } from '@angular/common/http';
-import { HttpResponse } from '@angular/common/http';
-import { Observable, of, throwError } from 'rxjs';
+import { HttpHeaders } from '@angular/common/http';
+import { Observable, throwError } from 'rxjs';
 import { RestService } from './rest.service';
 import { IList, ITask, IRequestCreateTask, IRequestModifyTask } from '../types/interface';
 
@@ -12,7 +11,6 @@ import { IList, ITask, IRequestCreateTask, IRequestModifyTask } from '../types/i
 export class ToDoService {
 
   apiServer = 'http://localhost:8080/api';
-  // apiKey = 'bearer w0e1dZPw7jYNan5o7khjUHU-schsHt3svUvNsrnysoFhz-pkaDgO8ce2oGlb3FLw';
   constructor(private httpService: RestService) { }
 
   authenticateUser(userName: string, password: string): Observable<string> {
